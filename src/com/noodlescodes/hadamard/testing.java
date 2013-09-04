@@ -9,10 +9,9 @@ public class testing {
 		
 		Tree<String> t = new Tree<String>(new TNode<String>("test"));
 		
-		System.out.println(t.getRoot().getData().toString());
-		
-		t.getRoot().setData("testing");
+		t.getRoot().addChild(new TNode<String>("testing"));
 		
 		System.out.println(t.getRoot().getData().toString());
+		System.out.println(t.getRoot().getChildren().get(0).getData().toString());
 	}
 }
