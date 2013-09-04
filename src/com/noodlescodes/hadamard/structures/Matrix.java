@@ -19,7 +19,7 @@ public class Matrix {
 		initialise();
 	}
 
-	private void initialise() {
+	protected void initialise() {
 		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < columns; j++) {
 				mat[i][j] = 0;
