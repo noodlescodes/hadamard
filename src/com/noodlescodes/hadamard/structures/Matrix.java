@@ -46,7 +46,7 @@ public class Matrix {
 
 	public int rowSum(int i) {
 		int sum = 0;
-
+		
 		for(int j = 0; j < columns; j++) {
 			sum += mat[i][j];
 		}
@@ -56,7 +56,7 @@ public class Matrix {
 
 	public int columnSum(int j) {
 		int sum = 0;
-
+		
 		for(int i = 0; i < rows; i++) {
 			sum += mat[i][j];
 		}
