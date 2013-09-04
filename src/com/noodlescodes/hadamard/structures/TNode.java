@@ -25,13 +25,17 @@ public class TNode<Type> {
 	public int getWeightToParent() {
 		return weightToParent;
 	}
+	
+	public int getNumberChildren() {
+		return children.size();
+	}
 
 	public void setData(Type data) {
 		this.data = data;
 	}
 
-	public void addChild(TNode<Type> c) {
-		children.add(c);
+	public void addChild(Type data) {
+		children.add(new TNode<Type>(data));
 	}
 
 	public ArrayList<TNode<Type>> getChildren() {

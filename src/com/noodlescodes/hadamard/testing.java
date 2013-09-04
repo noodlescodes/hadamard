@@ -1,17 +1,16 @@
 package com.noodlescodes.hadamard;
 
-import com.noodlescodes.hadamard.structures.TNode;
-import com.noodlescodes.hadamard.structures.Tree;
+import com.noodlescodes.hadamard.helpers.Controller;
+
 
 public class testing {
 	
 	public static void main(String[] args) {
 		
-		Tree<String> t = new Tree<String>(new TNode<String>("test"));
+		Controller<String> c = new Controller<String>("test");
 		
-		t.getRoot().addChild(new TNode<String>("testing"));
+		c.constructTree(5);
 		
-		System.out.println(t.getRoot().getData().toString());
-		System.out.println(t.getRoot().getChildren().get(0).getData().toString());
+		System.out.println(c.getRoot().getData().toString());
 	}
 }
