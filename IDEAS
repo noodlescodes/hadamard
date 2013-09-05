@@ -1,0 +1,5 @@
+Have all siblings in memory, have parent and grandparent in memory. Have all other nodes in tree stored in files unless: on the last sibling to be searched, then load up the next child of the parent into to memory, in a separate thread.
+
+===
+
+
