@@ -1,6 +1,8 @@
 package com.noodlescodes.hadamard.helpers;
 
-import com.noodlescodes.hadamard.structures.Matrix;
+import java.util.ArrayList;
+
+import com.noodlescodes.hadamard.structures.EquationSystemMatrix;
 import com.noodlescodes.hadamard.structures.TNode;
 import com.noodlescodes.hadamard.structures.Tree;
 
@@ -24,27 +26,22 @@ public class Controller<Type> {
 
 	public void constructTree(int toLevel) {
 		generateChildren(toLevel, tree.getRoot());
-		output = new String[maxLevel];
-		numberLevel = new int[maxLevel];
-		for(int i = 0; i < maxLevel; i++) {
-			output[i] = "";
-			numberLevel[i] = 0;
-		}
 	}
 
 	// Method recursively generates the tree. Will have to change to iterative when matrix sizes get big.
 	@SuppressWarnings("unchecked")
 	// this will be removed later.
 	private void generateChildren(int toLevel, TNode<Type> node) {
-		for(int i = 0; i < 3; i++) {
-			//node.addChild((Type) Integer.toString(level * i));
-			node.addChild((Type) new Matrix(2));
+		ArrayList<EquationSystemMatrix> children = ((EquationSystemMatrix) node.getData()).generateChildren();
+		for(int i = 0; i < children.size(); i++) {
+			node.addChild((Type) children.get(i));
 		}
 		level++;
 		if(level > maxLevel) {
 			maxLevel = level;
 		}
 		if(level < toLevel) {
+			//generates all children of the node
 			for(int i = 0; i < node.getNumberChildren(); i++) {
 				generateChildren(toLevel, node.getChildren().get(i));
 			}
@@ -52,7 +49,14 @@ public class Controller<Type> {
 		level--;
 	}
 
+	//need to rewrite output of the tree.
 	private void getStrings(int level, TNode<Type> node) {
+		output = new String[maxLevel];
+		numberLevel = new int[maxLevel];
+		for(int i = 0; i < maxLevel; i++) {
+			output[i] = "";
+			numberLevel[i] = 0;
+		}
 		for(int i = 0; i < node.getNumberChildren(); i++) {
 			output[level] += node.getChildren().get(i).getData().toString() + ", ";
 			if(level < maxLevel - 1) {
@@ -69,7 +73,7 @@ public class Controller<Type> {
 		String str = "";
 
 		for(int i = 0; i < maxLevel; i++) {
-			str += "Level " + Integer.toString(i) + ": "+ Integer.toString(numberLevel[i]) + "\n" + output[i] + "\n";
+			str += "Level " + Integer.toString(i) + ": " + Integer.toString(numberLevel[i]) + "\n" + output[i] + "\n";
 		}
 
 		return str;

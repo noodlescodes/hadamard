@@ -18,6 +18,12 @@ public class Matrix {
 		this.columns = columns;
 		initialise();
 	}
+	
+	public Matrix(int rows, int columns, int[] r, int[] b) {
+		mat = new int[rows][columns];
+		this.rows = rows;
+		this.columns = columns;
+	}
 
 	protected void initialise() {
 		for(int i = 0; i < rows; i++) {
