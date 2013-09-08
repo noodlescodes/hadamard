@@ -10,6 +10,8 @@ public class EquationSystemMatrix extends Matrix {
 
 	private int[] rhs;
 	private int[] bounds;
+	private static int[][] gramMat;
+	private static int gramOrder;
 
 	public EquationSystemMatrix(int size) {
 		super(size);
@@ -32,15 +34,42 @@ public class EquationSystemMatrix extends Matrix {
 	}
 
 	public EquationSystemMatrix(String file) {
+		// File structure:
+		// gram order
+		// gram matrix for the next gram order lines
+		// rows,columns
+		// matrix
+		// bounds
+		// rhs
+		// make the file IO work with labels so it's easier to create.
+
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
+		String[] data;
 
 		try {
 			br = new BufferedReader(new FileReader(file));
 
 			line = br.readLine();
-			String[] data = line.split(cvsSplitBy); // gets row and column data
+
+			// get the gram order
+			gramOrder = Integer.parseInt(line);
+
+			gramMat = new int[gramOrder][gramOrder];
+
+			int rowReadin = 0;
+			// while loop reads in the gram matrix
+			for(line = br.readLine(); rowReadin < gramOrder; line = br.readLine()) {
+				data = line.split(cvsSplitBy);
+				for(int j = 0; j < gramOrder; j++) {
+					gramMat[rowReadin][j] = Integer.parseInt(data[j]);
+				}
+				rowReadin++;
+			}
+
+			// line = br.readLine(); //don't need this because it's written in by the for loop previously
+			data = line.split(cvsSplitBy); // gets row and column data
 			rows = Integer.parseInt(data[0]);
 			columns = Integer.parseInt(data[1]);
 
@@ -48,7 +77,7 @@ public class EquationSystemMatrix extends Matrix {
 			bounds = new int[columns];
 			rhs = new int[rows];
 
-			int rowReadin = 0;
+			rowReadin = 0;
 			// while loop reads in matrix
 			for(line = br.readLine(); rowReadin < rows; line = br.readLine()) {
 				data = line.split(cvsSplitBy);
@@ -59,7 +88,7 @@ public class EquationSystemMatrix extends Matrix {
 			}
 
 			// get the bounds
-			// line = br.readLine();
+			// line = br.readLine(); //don't need to do this because it is done in the for loop previously.
 			data = line.split(cvsSplitBy);
 			for(int i = 0; i < bounds.length; i++) {
 				bounds[i] = Integer.parseInt(data[i]);
@@ -161,6 +190,7 @@ public class EquationSystemMatrix extends Matrix {
 	}
 
 	private int[] createChildBoundsVerbose(int[] solution, int[] bound) {
+
 		int[] childBounds = new int[2 * bound.length];
 
 		for(int i = 0; i < bounds.length; i++) {
@@ -168,6 +198,27 @@ public class EquationSystemMatrix extends Matrix {
 			childBounds[2 * i + 1] = bound[i] - solution[i];
 		}
 
+		return childBounds;
+	}
+	
+	private int[] createChildBounds(int[] verboseChildBounds) {
+		int width = 0;
+		for(int i = 0; i < verboseChildBounds.length; i++) {
+			if(verboseChildBounds[i] != 0) {
+				width++;
+			}
+		}
+		
+		int[] childBounds = new int[width];
+		
+		int counted = 0;
+		for(int i = 0; i < verboseChildBounds.length; i++) {
+			if(verboseChildBounds[i] != 0) {
+				childBounds[counted] = verboseChildBounds[i];
+				counted++;
+			}
+		}
+		
 		return childBounds;
 	}
 
@@ -209,13 +260,27 @@ public class EquationSystemMatrix extends Matrix {
 		return childMatrix;
 	}
 
-	private int[] createChildRHS() {
-		int[] childRHS = new int[3];
+	private int[] createChildRHS(int[][] mat, int[] gramRow, int[] bound, int length) {
+		int[] childRHS = new int[length];
+		
+		for(int i = 0; i < length; i++) {
+			childRHS[i] = gramRow[i]; 
+		}
+		
+		for(int i = 0; i < length; i++) {
+			for(int j = 0; j < mat[i].length; j++) {
+				childRHS[i] += mat[i][j] * bound[j];	
+			}
+			childRHS[i] = childRHS[i] >> 1;
+		}
 
 		return childRHS;
 	}
 
 	public ArrayList<EquationSystemMatrix> generateChildren() {
+		if(rhs == null) {
+			return new ArrayList<EquationSystemMatrix>();
+		}
 		ArrayList<EquationSystemMatrix> childrenArrayList = new ArrayList<EquationSystemMatrix>();
 
 		int[] solution = new int[bounds.length];
@@ -230,18 +295,17 @@ public class EquationSystemMatrix extends Matrix {
 				System.out.println("");
 				int[] childBoundsTemp = createChildBoundsVerbose(solution, bounds);
 				int[][] childMat = createChildMatrix(childBoundsTemp, bounds, mat);
-				int[] childBounds = new int[childMat[0].length];
-				int filled = 0;
-				for(int i = 0; i < childBoundsTemp.length; i++) {
-					if(childBoundsTemp[i] != 0) {
-						childBounds[filled] = childBoundsTemp[i];
-						filled++;
-					}
+				int[] childBounds = createChildBounds(childBoundsTemp);
+				int[] childRHS;
+				if(childMat.length != gramOrder){
+				childRHS = createChildRHS(childMat, gramMat[childMat.length], childBounds, childMat.length);
 				}
-				int[] childRHS = createChildRHS();
+				else {
+					childRHS = null;
+				}
 				// adding of child node goes here.
+				childrenArrayList.add(new EquationSystemMatrix(childMat.length, childMat[0].length, childRHS, childBounds, childMat));
 			}
-
 			solution = getNextMixedBase(solution);
 		}
 
@@ -291,10 +355,20 @@ public class EquationSystemMatrix extends Matrix {
 		str += "\n";
 		for(int i = 0; i < mat.length; i++) {
 			for(int j = 0; j < mat[i].length; j++) {
-				str += " " + mat[i][j];
+				if(mat[i][j] == 1) {
+					str += " 1";
+				}
+				else {
+					str += " -";
+				}
 			}
 			str += " | ";
-			str += rhs[i] + "\n";
+			if(rhs != null) {
+				str += rhs[i] + "\n";
+			}
+			else {
+				str += "\n";
+			}
 		}
 		return str;
 	}

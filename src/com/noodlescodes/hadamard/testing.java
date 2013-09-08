@@ -27,8 +27,8 @@ public class testing {
 		 * int[] r = {3, 1}; int[] b = {3, 2}; int[][] m = new int[r.length][b.length]; for(int i = 0; i < m.length; i++) { for(int j = 0; j < m[i].length; j++) { m[i][j] = 1; } } m[1][2] = -1; m[1][3] = -1; m[2][1] = -1; m[2][3] = -1;
 		 */
 
-		Controller<EquationSystemMatrix> c = new Controller<EquationSystemMatrix>(new EquationSystemMatrix("test.dat"));
-		c.constructTree(3);
+		Controller<EquationSystemMatrix> c = new Controller<EquationSystemMatrix>(new EquationSystemMatrix("test2.dat"));
+		c.constructTree(5);
 
 		// System.out.println(c.toString());
 

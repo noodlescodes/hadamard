@@ -29,19 +29,21 @@ public class Controller<Type> {
 	}
 
 	// Method recursively generates the tree. Will have to change to iterative when matrix sizes get big.
+	// Fixed if implement ideas from file.
 	@SuppressWarnings("unchecked")
 	// this will be removed later.
 	private void generateChildren(int toLevel, TNode<Type> node) {
 		ArrayList<EquationSystemMatrix> children = ((EquationSystemMatrix) node.getData()).generateChildren();
 		for(int i = 0; i < children.size(); i++) {
 			node.addChild((Type) children.get(i));
+			System.out.println(children.get(i).toString());
 		}
 		level++;
 		if(level > maxLevel) {
 			maxLevel = level;
 		}
 		if(level < toLevel) {
-			//generates all children of the node
+			// generates all children of the node
 			for(int i = 0; i < node.getNumberChildren(); i++) {
 				generateChildren(toLevel, node.getChildren().get(i));
 			}
@@ -49,7 +51,6 @@ public class Controller<Type> {
 		level--;
 	}
 
-	//need to rewrite output of the tree.
 	private void getStrings(int level, TNode<Type> node) {
 		output = new String[maxLevel];
 		numberLevel = new int[maxLevel];
