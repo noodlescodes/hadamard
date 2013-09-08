@@ -1,5 +1,9 @@
 package com.noodlescodes.hadamard.structures;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class EquationSystemMatrix extends Matrix {
@@ -21,6 +25,74 @@ public class EquationSystemMatrix extends Matrix {
 		bounds = b;
 	}
 
+	public EquationSystemMatrix(int rows, int columns, int[] r, int[] b, int[][] mat) {
+		super(rows, columns, r, b, mat);
+		rhs = r;
+		bounds = b;
+	}
+
+	public EquationSystemMatrix(String file) {
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+
+		try {
+			br = new BufferedReader(new FileReader(file));
+
+			line = br.readLine();
+			String[] data = line.split(cvsSplitBy); // gets row and column data
+			rows = Integer.parseInt(data[0]);
+			columns = Integer.parseInt(data[1]);
+
+			mat = new int[rows][columns];
+			bounds = new int[columns];
+			rhs = new int[rows];
+
+			int rowReadin = 0;
+			// while loop reads in matrix
+			for(line = br.readLine(); rowReadin < rows; line = br.readLine()) {
+				data = line.split(cvsSplitBy);
+				for(int i = 0; i < mat[rowReadin].length; i++) {
+					mat[rowReadin][i] = Integer.parseInt(data[i]);
+				}
+				rowReadin++;
+			}
+
+			// get the bounds
+			// line = br.readLine();
+			data = line.split(cvsSplitBy);
+			for(int i = 0; i < bounds.length; i++) {
+				bounds[i] = Integer.parseInt(data[i]);
+			}
+
+			// get the rhs
+			line = br.readLine();
+			data = line.split(cvsSplitBy);
+			for(int i = 0; i < rhs.length; i++) {
+				rhs[i] = Integer.parseInt(data[i]);
+			}
+		}
+		catch(FileNotFoundException e) {
+			System.out.println("File not found.");
+			e.printStackTrace();
+		}
+		catch(IOException e) {
+			System.out.println("IO error.");
+			e.printStackTrace();
+		}
+		finally {
+			if(br != null) {
+				try {
+					br.close();
+				}
+				catch(IOException e) {
+					System.out.println("Couldn't close BufferedReader.");
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	private int[] getNextMixedBase(int[] current) {
 
 		boolean done = true;
@@ -33,9 +105,6 @@ public class EquationSystemMatrix extends Matrix {
 			return null;
 		}
 		else {
-			for(int i = bounds.length - 1; i >= 0; i--) {
-				System.out.print(current[i]);
-			}
 			current[0]--;
 			for(int i = 0; i < bounds.length; i++) {
 				if(current[i] < 0 && i != bounds.length - 1) {
@@ -48,20 +117,19 @@ public class EquationSystemMatrix extends Matrix {
 					current[i] = bounds[i];
 				}
 			}
-			System.out.println("");
 		}
 
 		return current;
 	}
 
-	private int[] multiply(int[][] m, int[] vec) {
-		int[] resultvec = new int[vec.length];
+	protected int[] multiply(int[][] m, int[] vec) {
+		int[] resultvec = new int[m.length];
 
 		for(int i = 0; i < resultvec.length; i++) {
 			resultvec[i] = 0;
 		}
 
-		for(int i = 0; i < vec.length; i++) {
+		for(int i = 0; i < m.length; i++) {
 			for(int j = 0; j < vec.length; j++) {
 				resultvec[i] += m[i][j] * vec[j];
 			}
@@ -84,21 +152,97 @@ public class EquationSystemMatrix extends Matrix {
 		return true;
 	}
 
+	private void printVec(int[] v) {
+		System.out.print("(");
+		for(int i = 0; i < v.length - 1; i++) {
+			System.out.print(v[i] + ", ");
+		}
+		System.out.print(v[v.length - 1] + ")");
+	}
+
+	private int[] createChildBoundsVerbose(int[] solution, int[] bound) {
+		int[] childBounds = new int[2 * bound.length];
+
+		for(int i = 0; i < bounds.length; i++) {
+			childBounds[2 * i] = solution[i];
+			childBounds[2 * i + 1] = bound[i] - solution[i];
+		}
+
+		return childBounds;
+	}
+
+	private int[][] createChildMatrix(int[] childBounds, int[] bound, int[][] matrix) {
+		int width = 0;
+		for(int i = 0; i < childBounds.length; i++) {
+			if(childBounds[i] != 0) {
+				width++;
+			}
+		}
+
+		int[][] childMatrix = new int[matrix.length + 1][width];
+
+		int filled = 0;
+		int column = 0;
+		for(int i = 0; i < matrix.length; i++) {
+			for(int j = 0; j < childBounds.length / 2; j++) {
+				if(childBounds[2 * j] != 0) {
+					childMatrix[i][filled] = matrix[i][column];
+					filled++;
+				}
+				if(childBounds[2 * j + 1] != 0) {
+					childMatrix[i][filled] = matrix[i][column];
+					filled++;
+				}
+				column++;
+			}
+			filled = 0;
+			column = 0;
+		}
+
+		for(int i = 0; i < childBounds.length; i++) {
+			if(childBounds[i] != 0) {
+				childMatrix[childMatrix.length - 1][filled] = (int) Math.pow(-1, i);
+				filled++;
+			}
+		}
+
+		return childMatrix;
+	}
+
+	private int[] createChildRHS() {
+		int[] childRHS = new int[3];
+
+		return childRHS;
+	}
+
 	public ArrayList<EquationSystemMatrix> generateChildren() {
 		ArrayList<EquationSystemMatrix> childrenArrayList = new ArrayList<EquationSystemMatrix>();
 
-		int[] count = new int[bounds.length];
-		for(int i = 0; i < count.length; i++) {
-			count[i] = bounds[i];
+		int[] solution = new int[bounds.length];
+		for(int i = 0; i < solution.length; i++) {
+			solution[i] = bounds[i];
 		}
 
-		while(count != null) {
-			int[] resultVec = multiply(mat, count);
-			if(vecEqual(resultVec, rhs)) {
-				childrenArrayList.add(new EquationSystemMatrix(rows + 1, columns, rhs, bounds));
+		while(solution != null) {
+			int[] resultVec = multiply(mat, solution);
+			if(vecEqual(resultVec, rhs)) { // if we have a solution, then create a child for it
+				printVec(solution); // remove this print block later
+				System.out.println("");
+				int[] childBoundsTemp = createChildBoundsVerbose(solution, bounds);
+				int[][] childMat = createChildMatrix(childBoundsTemp, bounds, mat);
+				int[] childBounds = new int[childMat[0].length];
+				int filled = 0;
+				for(int i = 0; i < childBoundsTemp.length; i++) {
+					if(childBoundsTemp[i] != 0) {
+						childBounds[filled] = childBoundsTemp[i];
+						filled++;
+					}
+				}
+				int[] childRHS = createChildRHS();
+				// adding of child node goes here.
 			}
 
-			count = getNextMixedBase(count);
+			solution = getNextMixedBase(solution);
 		}
 
 		return childrenArrayList;
