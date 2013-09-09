@@ -12,6 +12,7 @@ public class EquationSystemMatrix extends Matrix {
 	private int[] bounds;
 	private static int[][] gramMat;
 	private static int gramOrder;
+	public static int numberSolutions = 0;
 
 	public EquationSystemMatrix(int size) {
 		super(size);
@@ -200,7 +201,7 @@ public class EquationSystemMatrix extends Matrix {
 
 		return childBounds;
 	}
-	
+
 	private int[] createChildBounds(int[] verboseChildBounds) {
 		int width = 0;
 		for(int i = 0; i < verboseChildBounds.length; i++) {
@@ -208,9 +209,9 @@ public class EquationSystemMatrix extends Matrix {
 				width++;
 			}
 		}
-		
+
 		int[] childBounds = new int[width];
-		
+
 		int counted = 0;
 		for(int i = 0; i < verboseChildBounds.length; i++) {
 			if(verboseChildBounds[i] != 0) {
@@ -218,7 +219,7 @@ public class EquationSystemMatrix extends Matrix {
 				counted++;
 			}
 		}
-		
+
 		return childBounds;
 	}
 
@@ -262,14 +263,14 @@ public class EquationSystemMatrix extends Matrix {
 
 	private int[] createChildRHS(int[][] mat, int[] gramRow, int[] bound, int length) {
 		int[] childRHS = new int[length];
-		
+
 		for(int i = 0; i < length; i++) {
-			childRHS[i] = gramRow[i]; 
+			childRHS[i] = gramRow[i];
 		}
-		
+
 		for(int i = 0; i < length; i++) {
 			for(int j = 0; j < mat[i].length; j++) {
-				childRHS[i] += mat[i][j] * bound[j];	
+				childRHS[i] += mat[i][j] * bound[j];
 			}
 			childRHS[i] = childRHS[i] >> 1;
 		}
@@ -291,19 +292,20 @@ public class EquationSystemMatrix extends Matrix {
 		while(solution != null) {
 			int[] resultVec = multiply(mat, solution);
 			if(vecEqual(resultVec, rhs)) { // if we have a solution, then create a child for it
-				printVec(solution); // remove this print block later
-				System.out.println("");
+				// printVec(solution); // remove this print block later
+				// System.out.println("");
 				int[] childBoundsTemp = createChildBoundsVerbose(solution, bounds);
 				int[][] childMat = createChildMatrix(childBoundsTemp, bounds, mat);
 				int[] childBounds = createChildBounds(childBoundsTemp);
 				int[] childRHS;
-				if(childMat.length != gramOrder){
-				childRHS = createChildRHS(childMat, gramMat[childMat.length], childBounds, childMat.length);
+				if(childMat.length != gramOrder) {
+					childRHS = createChildRHS(childMat, gramMat[childMat.length], childBounds, childMat.length);
 				}
 				else {
 					childRHS = null;
+					numberSolutions++;
+					System.out.println(new EquationSystemMatrix(childMat.length, childMat[0].length, childRHS, childBounds, childMat));
 				}
-				// adding of child node goes here.
 				childrenArrayList.add(new EquationSystemMatrix(childMat.length, childMat[0].length, childRHS, childBounds, childMat));
 			}
 			solution = getNextMixedBase(solution);

@@ -2,4 +2,12 @@ Have all siblings in memory, have parent and grandparent in memory. Have all oth
 
 ===
 
+In decomposition routine, when we get to the stage that bounds is the identity vector, ie. bounds.length = order, do different decomposition routine, provided the gram matrix is "nice". Where "nice" is all entries are the same as each other to the right of the column we're working on (equivalently, below the row)
 
+The different decomp. routine will rely on the fact that a solution at row greater than k will also be a solution at row k, where k is the row we're working at.
+
+If there are insufficient solutions to fill in the rest of the matrix, stop. Else, test permutations of the solutions amongst themselves. This means we can also apply a lexicographic ordering on those solutions, and hence do pruning. 
+
+===
+
+Compare the solve after each component of the vector is calculated?
