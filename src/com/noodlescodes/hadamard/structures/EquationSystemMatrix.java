@@ -292,8 +292,6 @@ public class EquationSystemMatrix extends Matrix {
 		while(solution != null) {
 			int[] resultVec = multiply(mat, solution);
 			if(vecEqual(resultVec, rhs)) { // if we have a solution, then create a child for it
-				// printVec(solution); // remove this print block later
-				// System.out.println("");
 				int[] childBoundsTemp = createChildBoundsVerbose(solution, bounds);
 				int[][] childMat = createChildMatrix(childBoundsTemp, bounds, mat);
 				int[] childBounds = createChildBounds(childBoundsTemp);
@@ -324,6 +322,10 @@ public class EquationSystemMatrix extends Matrix {
 
 	public void setBounds(int[] b) {
 		bounds = b;
+	}
+	
+	public int getGramOrder() {
+		return gramOrder;
 	}
 
 	protected void initialise() {
