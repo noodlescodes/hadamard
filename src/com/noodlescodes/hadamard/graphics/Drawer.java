@@ -34,6 +34,7 @@ public class Drawer {
 						if(n.level == n.getData().getGramOrder() - 1) {
 							n.hasSolution();
 							n.setType(Sprite.TYPE.CIRCLE);
+							n.childrenGenerated();
 						}
 						addNode(n);
 					}
@@ -47,6 +48,20 @@ public class Drawer {
 			}
 			nodes.get(i).update();
 		}
+	}
+	
+	public String hover(int x, int y) {
+		String str = null;
+		for(int i = 0; i < nodes.size(); i++) {
+			// change the hardcoded 17 here to the size of the node we are looking at by the formula for the level.
+			if(nodes.get(i).x <= x && nodes.get(i).x + 17 >= x && nodes.get(i).y <= y && nodes.get(i).y + 17 >= y) {
+				str = nodes.get(i).getData().toString();
+				if(nodes.get(i).getHasSolution()) {
+					str += "\nCompleted!";
+				}
+			}
+		}
+		return str;
 	}
 
 	public void render(int xScroll, int yScroll, Screen screen) {

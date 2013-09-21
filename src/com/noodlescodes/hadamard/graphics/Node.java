@@ -69,6 +69,10 @@ public class Node {
 		hasSolution = true;
 	}
 	
+	public boolean getHasSolution() {
+		return hasSolution;
+	}
+	
 	public void setType(Sprite.TYPE t) {
 		type = t;
 	}

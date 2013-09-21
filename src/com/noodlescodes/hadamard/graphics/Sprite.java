@@ -31,10 +31,12 @@ public class Sprite {
 		load();
 	}
 
-	public Sprite(int width, int height, int color) {
+	public Sprite(int width, int height, int x, int y, int color) {
 		SIZE = -1;
 		this.width = width;
 		this.height = height;
+		this.x = x;
+		this.y = y;
 		pixels = new int[width * height];
 		setColor(color);
 	}

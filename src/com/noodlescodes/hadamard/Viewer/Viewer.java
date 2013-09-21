@@ -16,7 +16,6 @@ import com.noodlescodes.hadamard.graphics.Drawer;
 import com.noodlescodes.hadamard.graphics.Node;
 import com.noodlescodes.hadamard.graphics.Screen;
 import com.noodlescodes.hadamard.graphics.Sprite;
-import com.noodlescodes.hadamard.graphics.Sprite.TYPE;
 import com.noodlescodes.hadamard.input.Keyboard;
 import com.noodlescodes.hadamard.input.Mouse;
 import com.noodlescodes.hadamard.structures.EquationSystemMatrix;
@@ -60,7 +59,7 @@ public class Viewer extends Canvas implements Runnable {
 		int h = length * 150;
 		int w = 1000;
 
-		drawer = new Drawer(w, h, new Node(w >> 1, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE));
+		drawer = new Drawer(w, h, new Node((w >> 1) - 8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE));
 
 		user = new User(w >> 1, 0, key);
 
@@ -94,6 +93,11 @@ public class Viewer extends Canvas implements Runnable {
 		int yScroll = user.y - screen.height / 2;
 		drawer.render(xScroll, yScroll, screen);
 		user.render(screen);
+		String hoverString = drawer.hover(user.x, user.y);
+		if(hoverString != null) {
+			Sprite s = new Sprite(75, screen.height, 0, 0, 0xFFFFFF);
+			screen.renderSprite(xScroll + (screen.width - 75), yScroll, s, false);
+		}
 		for(int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
 		}
@@ -106,6 +110,14 @@ public class Viewer extends Canvas implements Runnable {
 			g.drawString("Y: " + user.y, 1, 40);
 			g.drawString("MouseX: " + mouse.getX(), 1, 85);
 			g.drawString("MouseY: " + mouse.getY(), 1, 105);
+		}
+		if(hoverString != null) {
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Monospaced", 0, 20));
+			int ypos = 0;
+			for(String line : hoverString.split("\n")) {
+				g.drawString(line, screen.width * scale - 74 * scale, ypos += g.getFontMetrics().getHeight());
+			}
 		}
 		bs.show();
 	}
