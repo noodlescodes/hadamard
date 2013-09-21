@@ -15,6 +15,8 @@ import com.noodlescodes.hadamard.entity.User;
 import com.noodlescodes.hadamard.graphics.Drawer;
 import com.noodlescodes.hadamard.graphics.Node;
 import com.noodlescodes.hadamard.graphics.Screen;
+import com.noodlescodes.hadamard.graphics.Sprite;
+import com.noodlescodes.hadamard.graphics.Sprite.TYPE;
 import com.noodlescodes.hadamard.input.Keyboard;
 import com.noodlescodes.hadamard.input.Mouse;
 import com.noodlescodes.hadamard.structures.EquationSystemMatrix;
@@ -58,9 +60,9 @@ public class Viewer extends Canvas implements Runnable {
 		int h = length * 150;
 		int w = 1000;
 
-		drawer = new Drawer(w, h, new Node(h >> 1, 0, 0, tree.getRoot()));
+		drawer = new Drawer(w, h, new Node(w >> 1, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE));
 
-		user = new User(h >> 1, 0, key);
+		user = new User(w >> 1, 0, key);
 
 		init();
 		addKeyListener(key);

@@ -9,8 +9,8 @@ public class testing {
 		
 		long startTime = System.currentTimeMillis();
 
-		Controller<EquationSystemMatrix> c = new Controller<EquationSystemMatrix>(new EquationSystemMatrix("test11.dat"));
-		c.constructTree(11);
+		Controller<EquationSystemMatrix> c = new Controller<EquationSystemMatrix>(new EquationSystemMatrix("test8.dat"));
+		c.constructTree(8);
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - startTime));
 	}

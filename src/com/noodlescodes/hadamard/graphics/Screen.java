@@ -19,6 +19,48 @@ public class Screen {
 		}
 	}
 
+	public void renderSprite(int xp, int yp, Sprite sprite, boolean fixed) {
+		if(fixed) {
+			xp -= xOffset;
+			yp -= yOffset;
+		}
+		for(int y = 0; y < sprite.getHeight(); y++) {
+			int ya = y + yp - yOffset;
+			for(int x = 0; x < sprite.getWidth(); x++) {
+				int xa = x + xp - xOffset;
+				if(xa < 0 || xa >= width || ya < 0 || ya >= height) {
+					continue;
+				}
+				int col = sprite.pixels[x + y * sprite.getWidth()];
+				if(col != 0xFF00FF) {
+					pixels[xa + ya * width] = sprite.pixels[x + y * sprite.getWidth()];
+				}
+			}
+		}
+	}
+
+	// Not in use anymore
+	public void renderSpriteOLD(int xp, int yp, Sprite sprite, boolean fixed) {
+		if(fixed) {
+			xp -= xOffset;
+			yp -= yOffset;
+		}
+		for(int y = 0; y < sprite.SIZE; y++) {
+			int ya = y + yp - yOffset;
+			for(int x = 0; x < sprite.SIZE; x++) {
+				int xa = x + xp - xOffset;
+				if(xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) {
+					break;
+				}
+				if(xa < 0) {
+					xa = 0;
+				}
+				pixels[xa + ya * width] = sprite.pixels[x + y * sprite.SIZE];
+			}
+		}
+	}
+
+	// Not in use anymore
 	public void renderShape(int xp, int yp, Sprite sprite) {
 		for(int y = 0; y < sprite.SIZE; y++) {
 			int ya = y + yp - yOffset;

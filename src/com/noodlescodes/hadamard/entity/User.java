@@ -6,10 +6,6 @@ import com.noodlescodes.hadamard.input.Keyboard;
 
 public class User extends Entity {
 
-	private int dir = 0;
-	private boolean[] directions = new boolean[4];
-	public boolean moving = false;
-
 	private static Sprite s = Sprite.dot;
 	private Keyboard input;
 
@@ -26,34 +22,6 @@ public class User extends Entity {
 	}
 
 	public void move(int xa, int ya) {
-		if(xa > 0) {
-			dir = 1;
-			directions[1] = true;
-		}
-		else {
-			directions[1] = false;
-		}
-		if(xa < 0) {
-			dir = 3;
-			directions[3] = true;
-		}
-		else {
-			directions[3] = false;
-		}
-		if(ya > 0) {
-			dir = 2;
-			directions[2] = true;
-		}
-		else {
-			directions[2] = false;
-		}
-		if(ya < 0) {
-			dir = 0;
-			directions[0] = true;
-		}
-		else {
-			directions[0] = false;
-		}
 		x += xa;
 		y += ya;
 	}
@@ -63,7 +31,7 @@ public class User extends Entity {
 	}
 
 	public void render(Screen screen) {
-		screen.renderShape(x, y, s);
+		screen.renderSprite(x, y, s, false);
 	}
 
 	private void moveAlgorithm() {
@@ -80,13 +48,9 @@ public class User extends Entity {
 		if(input.right) {
 			xa++;
 		}
-		
+
 		if(xa != 0 || ya != 0) {
 			move(xa, ya);
-			moving = true;
-		}
-		else {
-			moving = false;
 		}
 	}
 }
