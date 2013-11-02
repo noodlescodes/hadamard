@@ -19,6 +19,22 @@ public class Screen {
 		}
 	}
 
+	public void renderLine(int x0, int y0, int x1, int y1) {
+		x0 -= xOffset;
+		x1 -= xOffset;
+		y0 -= yOffset;
+		y1 -= yOffset;
+		if(x1 - x0 == 0) {
+			for(int y = Math.min(y1, y0); y < Math.max(y1, y0); y++) {
+				if(y < 0 || y >= height) {
+					continue;
+				}
+				pixels[x0 + y * width] = 0x5E2D79;
+			}
+			return;
+		}
+	}
+
 	public void renderSprite(int xp, int yp, Sprite sprite, boolean fixed) {
 		if(fixed) {
 			xp -= xOffset;
@@ -28,8 +44,11 @@ public class Screen {
 			int ya = y + yp - yOffset;
 			for(int x = 0; x < sprite.getWidth(); x++) {
 				int xa = x + xp - xOffset;
-				if(xa < 0 || xa >= width || ya < 0 || ya >= height) {
-					continue;
+				if(xa < -sprite.getWidth() || xa >= width || ya < 0 || ya >= height) {
+					break;
+				}
+				if(xa < 0) {
+					xa = 0;
 				}
 				int col = sprite.pixels[x + y * sprite.getWidth()];
 				if(col != 0xFF00FF) {

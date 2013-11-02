@@ -38,6 +38,8 @@ public class Viewer extends Canvas implements Runnable {
 	private User user;
 	private Tree<EquationSystemMatrix> tree;
 	private static boolean running = false;
+	
+	private String oldHoverString = "";
 
 	private Screen screen;
 
@@ -57,11 +59,11 @@ public class Viewer extends Canvas implements Runnable {
 
 		int length = ((EquationSystemMatrix) tree.getRoot().getData()).getGramOrder();
 		int h = length * 150;
-		int w = 1000;
+		int w = 500;
 
-		drawer = new Drawer(w, h, new Node((w >> 1) - 8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE));
+		drawer = new Drawer(w, h, new Node(-8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE, null));
 
-		user = new User(w >> 1, 0, key);
+		user = new User(0, 0, key);
 
 		init();
 		addKeyListener(key);
@@ -72,7 +74,7 @@ public class Viewer extends Canvas implements Runnable {
 	public void init() {
 		System.out.println("Initialising.");
 		user.init(drawer);
-		System.out.println("User initialised");
+		System.out.println("User initialised.");
 	}
 
 	public void update() {
@@ -81,6 +83,7 @@ public class Viewer extends Canvas implements Runnable {
 		drawer.update(user.x, user.y, key.enter);
 	}
 
+	@SuppressWarnings("static-access")
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null) {
@@ -94,13 +97,13 @@ public class Viewer extends Canvas implements Runnable {
 		drawer.render(xScroll, yScroll, screen);
 		user.render(screen);
 		String hoverString = drawer.hover(user.x, user.y);
-		if(hoverString != null) {
-			Sprite s = new Sprite(75, screen.height, 0, 0, 0xFFFFFF);
-			screen.renderSprite(xScroll + (screen.width - 75), yScroll, s, false);
-		}
+		// White box to the right
+		Sprite s = new Sprite(75, screen.height, 0, 0, 0xFFFFFF);
+		screen.renderSprite(xScroll + (screen.width - 75), yScroll, s, false);
 		for(int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
 		}
+		
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		if(key.debug) {
@@ -111,13 +114,17 @@ public class Viewer extends Canvas implements Runnable {
 			g.drawString("MouseX: " + mouse.getX(), 1, 85);
 			g.drawString("MouseY: " + mouse.getY(), 1, 105);
 		}
-		if(hoverString != null) {
-			g.setColor(Color.BLACK);
-			g.setFont(new Font("Monospaced", 0, 20));
-			int ypos = 0;
-			for(String line : hoverString.split("\n")) {
-				g.drawString(line, screen.width * scale - 74 * scale, ypos += g.getFontMetrics().getHeight());
-			}
+		if(hoverString == null) {
+			hoverString = oldHoverString;
+		}
+		else {
+			oldHoverString = hoverString;
+		}
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Monospaced", 0, 20));
+		int ypos = 0;
+		for(String line : hoverString.split("\n")) {
+			g.drawString(line, scale * (screen.width - 74), ypos += g.getFontMetrics().getHeight());
 		}
 		bs.show();
 	}
@@ -173,7 +180,7 @@ public class Viewer extends Canvas implements Runnable {
 		System.out.println("Started viewer.");
 		System.out.println("Setting frame to not be resizable.");
 		viewer.frame.setResizable(false);
-		System.out.println("setting title.");
+		System.out.println("Setting title.");
 		viewer.frame.setTitle("Viewer");
 		viewer.frame.add(viewer);
 		System.out.println("Packing everything.");
@@ -182,7 +189,7 @@ public class Viewer extends Canvas implements Runnable {
 		viewer.frame.setLocationRelativeTo(null);
 		viewer.frame.setVisible(true);
 
-		System.out.println("Starting");
+		System.out.println("Starting...");
 		viewer.start();
 	}
 }

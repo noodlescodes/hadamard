@@ -1,1 +1,7 @@
 A project that works on Hadamard matrices.
+
+
+Current bugs:
+
+ - Rendering lines on a loop
+ - ArrayIndexOutOfBoundsException thrown when rendering lines occasionally.

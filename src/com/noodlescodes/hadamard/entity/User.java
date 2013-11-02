@@ -21,7 +21,7 @@ public class User extends Entity {
 		this.input = input;
 	}
 
-	public void move(int xa, int ya) {
+	private void move(int xa, int ya) {
 		x += xa;
 		y += ya;
 	}

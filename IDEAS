@@ -11,3 +11,7 @@ If there are insufficient solutions to fill in the rest of the matrix, stop. Els
 ===
 
 Compare the solve after each component of the vector is calculated?
+
+===
+
+To place children, keep count of the number of children at each level, then calculate the x position so each node is equi-distant apart. This may look horrible but it's better than what we have.

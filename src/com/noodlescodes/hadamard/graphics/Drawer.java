@@ -7,7 +7,6 @@ import com.noodlescodes.hadamard.structures.TNode;
 
 public class Drawer {
 	public int width, height;
-	public int[] pixels;
 
 	private final static int levelHeight = 75;
 
@@ -29,8 +28,9 @@ public class Drawer {
 				try {
 					int xpInitial = nodes.get(i).x / children.size();
 					for(int j = 0; j < children.size(); j++) {
-						// got to change x-positioning
-						Node n = new Node(xpInitial * (j + 1), (nodes.get(i).level + 1) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE);
+						// have to change x-positioning
+						// Probably going to need two variables in each Node to specify the upper and lower bounds for the childrens placement.
+						Node n = new Node(xpInitial * (j + 1), (nodes.get(i).level + 1) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
 						if(n.level == n.getData().getGramOrder() - 1) {
 							n.hasSolution();
 							n.setType(Sprite.TYPE.CIRCLE);
@@ -42,14 +42,14 @@ public class Drawer {
 				}
 				catch(ArithmeticException e) {
 					// this had better only activate with a division by 0 error
-					System.out.println("No children #foreveralone");
+					System.out.println("No children");
 				}
 				nodes.get(i).childrenGenerated();
 			}
 			nodes.get(i).update();
 		}
 	}
-	
+
 	public String hover(int x, int y) {
 		String str = null;
 		for(int i = 0; i < nodes.size(); i++) {
@@ -66,8 +66,12 @@ public class Drawer {
 
 	public void render(int xScroll, int yScroll, Screen screen) {
 		screen.setOffset(xScroll, yScroll);
+		// Think I'm putting the rendering of edges in the rendering of nodes.
+		// for(int i = 0; i < nodes.size(); i++) {
+		// nodes.get(i).renderEdges(xScroll, xScroll + screen.width, yScroll, yScroll + screen.height, screen);
+		// }
 		for(int i = 0; i < nodes.size(); i++) {
-			nodes.get(i).render(xScroll, xScroll + screen.width, yScroll, xScroll + screen.height, screen);
+			nodes.get(i).render(xScroll, xScroll + screen.width, yScroll, yScroll + screen.height, screen);
 		}
 	}
 
