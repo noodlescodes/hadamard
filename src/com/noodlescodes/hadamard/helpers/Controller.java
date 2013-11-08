@@ -26,7 +26,7 @@ public class Controller<Type> {
 
 	public void constructTree(int toLevel) {
 		generateChildren(toLevel, tree.getRoot());
-		System.out.println("Number solutions: " + ((EquationSystemMatrix) tree.getRoot().getData()).numberSolutions);
+		System.out.println("Number solutions: " + EquationSystemMatrix.numberSolutions);
 	}
 
 	// Method recursively generates the tree. Will have to change to iterative when matrix sizes get big.

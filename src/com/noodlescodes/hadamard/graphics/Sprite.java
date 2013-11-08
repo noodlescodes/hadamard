@@ -5,14 +5,9 @@ public class Sprite {
 	private final int width, height;
 	private int x, y;
 	public int[] pixels;
-	private SpriteSheet sheet;
 	private TYPE type;
 
-	public static Sprite voidSprite = new Sprite(16, 0, Sprite.TYPE.SQUARE);
-	public static Sprite voidSpritePink = new Sprite(16, 0xFF00FF, Sprite.TYPE.SQUARE);
 	public static Sprite dot = new Sprite(1, 0xFFFFFF, Sprite.TYPE.SQUARE);
-
-	public static Sprite square = new Sprite(16, 0, 0, SpriteSheet.shapes);
 
 	// Need to add more shapes later.
 	// If circle is required, needs an odd diameter
@@ -20,15 +15,13 @@ public class Sprite {
 		SQUARE, CIRCLE;
 	}
 
-	public Sprite(int size, int x, int y, SpriteSheet sheet) {
+	public Sprite(int size, int x, int y) {
 		SIZE = size;
 		this.x = x * SIZE;
 		this.y = y * SIZE;
 		this.width = size;
 		this.height = size;
-		this.sheet = sheet;
 		pixels = new int[SIZE * SIZE];
-		load();
 	}
 
 	public Sprite(int width, int height, int x, int y, int color) {
@@ -60,41 +53,34 @@ public class Sprite {
 	}
 
 	private void setShape() {
-		switch(type) {
-			case SQUARE:
-				break;
-			case CIRCLE:
-				for(int y = 0; y < SIZE; y++) {
-					for(int x = 0; x < SIZE; x++) {
-						if(Math.sqrt((x - (SIZE >> 1)) * (x - (SIZE >> 1)) + (y - (SIZE >> 1)) * (y - (SIZE >> 1))) > (double)(SIZE >> 1)) {
-							pixels[x + y * SIZE] = 0xFF00FF;
-						}
+		switch (type) {
+		case SQUARE:
+			break;
+		case CIRCLE:
+			for (int y = 0; y < SIZE; y++) {
+				for (int x = 0; x < SIZE; x++) {
+					if (Math.sqrt((x - (SIZE >> 1)) * (x - (SIZE >> 1))
+							+ (y - (SIZE >> 1)) * (y - (SIZE >> 1))) > (double) (SIZE >> 1)) {
+						pixels[x + y * SIZE] = 0xFF00FF;
 					}
 				}
-				break;
+			}
+			break;
 		}
 	}
 
 	public void setColor(int color) {
-		for(int i = 0; i < pixels.length; i++) {
+		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = color;
 		}
 	}
 
 	public void setSprite(TYPE t) {
-		switch(t) {
-			case SQUARE:
-				break;
-			case CIRCLE:
-				break;
-		}
-	}
-
-	private void load() {
-		for(int y = 0; y < SIZE; y++) {
-			for(int x = 0; x < SIZE; x++) {
-				pixels[x + y * SIZE] = sheet.pixels[(this.x + x) + (this.y + y) * sheet.SIZE];
-			}
+		switch (t) {
+		case SQUARE:
+			break;
+		case CIRCLE:
+			break;
 		}
 	}
 }
