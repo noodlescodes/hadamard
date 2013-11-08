@@ -3,7 +3,6 @@ package com.noodlescodes.hadamard.graphics;
 public class Sprite {
 	public final int SIZE;
 	private final int width, height;
-	private int x, y;
 	public int[] pixels;
 	private TYPE type;
 
@@ -17,8 +16,6 @@ public class Sprite {
 
 	public Sprite(int size, int x, int y) {
 		SIZE = size;
-		this.x = x * SIZE;
-		this.y = y * SIZE;
 		this.width = size;
 		this.height = size;
 		pixels = new int[SIZE * SIZE];
@@ -28,8 +25,6 @@ public class Sprite {
 		SIZE = -1;
 		this.width = width;
 		this.height = height;
-		this.x = x;
-		this.y = y;
 		pixels = new int[width * height];
 		setColor(color);
 	}

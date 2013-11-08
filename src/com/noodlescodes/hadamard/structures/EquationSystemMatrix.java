@@ -182,6 +182,7 @@ public class EquationSystemMatrix extends Matrix {
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	private void printVec(int[] v) {
 		System.out.print("(");
 		for(int i = 0; i < v.length - 1; i++) {
