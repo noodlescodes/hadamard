@@ -38,7 +38,7 @@ public class Viewer extends Canvas implements Runnable {
 	private User user;
 	private Tree<EquationSystemMatrix> tree;
 	private static boolean running = false;
-	
+
 	private String oldHoverString = "";
 
 	private Screen screen;
@@ -61,7 +61,7 @@ public class Viewer extends Canvas implements Runnable {
 		int h = length * 150;
 		int w = 500;
 
-		drawer = new Drawer(w, h, new Node(-8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE, null));
+		drawer = new Drawer(w, h, new Node(-8, 0, 2, tree.getRoot(), Sprite.TYPE.SQUARE, null));
 
 		user = new User(0, 0, key);
 
@@ -83,7 +83,6 @@ public class Viewer extends Canvas implements Runnable {
 		drawer.update(user.x, user.y, key.enter);
 	}
 
-	@SuppressWarnings("static-access")
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null) {
@@ -103,7 +102,7 @@ public class Viewer extends Canvas implements Runnable {
 		for(int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
 		}
-		
+
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		if(key.debug) {
@@ -111,8 +110,8 @@ public class Viewer extends Canvas implements Runnable {
 			g.setFont(new Font(null, 0, 25));
 			g.drawString("X: " + user.x, 1, 20);
 			g.drawString("Y: " + user.y, 1, 40);
-			g.drawString("MouseX: " + mouse.getX(), 1, 85);
-			g.drawString("MouseY: " + mouse.getY(), 1, 105);
+			g.drawString("MouseX: " + Mouse.getX(), 1, 85);
+			g.drawString("MouseY: " + Mouse.getY(), 1, 105);
 		}
 		if(hoverString == null) {
 			hoverString = oldHoverString;

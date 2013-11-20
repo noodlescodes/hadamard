@@ -19,6 +19,7 @@ public class Screen {
 		}
 	}
 
+	// how could I not have committed the diagonal rendering somewhere #idiot
 	public void renderLine(int x0, int y0, int x1, int y1) {
 		x0 -= xOffset;
 		x1 -= xOffset;

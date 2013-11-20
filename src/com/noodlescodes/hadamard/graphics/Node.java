@@ -29,27 +29,16 @@ public class Node {
 		}
 	}
 
-	// this still doesn't fucking work
-	// public void renderEdges(int lowX, int highX, int lowY, int highY, Screen screen) {
-	// boolean childOnScreen = lowX < this.x && highX + 17 > this.x && lowY < this.y && highY + 17 > this.y;
-	// boolean parentOnScreen = false;
-	// if(this.parent != null) {
-	// parentOnScreen = lowX - 17 < this.parent.x && highX > this.parent.x && lowY - 17 < this.parent.y && highY > this.parent.y;
-	// }
-	// else {
-	// parentOnScreen = false;
-	// }
-	// if(parent != null && (childOnScreen || parentOnScreen)) {
-	// screen.renderLine(this.x + 8, this.y + 8, this.parent.x + 8, this.parent.y + 8);
-	// }
-	// }
-
 	// This works, just need to render if parent is on screen or child is on screen
 	public void renderEdges(int lowX, int highX, int lowY, int highY, Screen screen) {
+//		boolean childOnScreen = lowX - 17 > x || highX - 9 < x || lowY - 17 > y || highY < y;
+//		boolean parentOnScreen = lowX - 17 > parent.x || highX - 9 < parent.x || lowY - 17 > parent.y || highY < parent.y;
 		if(parent == null) {
 			return;
 		}
-		if(lowX - 17 > x || highX - 9 < x || lowY - 17 > y || highY < y) {
+		boolean childOnScreen = lowX - 17 > x || highX - 9 < x || lowY - 17 > y || highY < y;
+		boolean parentOnScreen = lowX - 17 > parent.x || highX - 9 < parent.x || lowY - 17 > parent.y || highY < parent.y;
+		if(childOnScreen && parentOnScreen) {
 			return;
 		}
 		screen.renderLine(this.x + 8, this.y + 8, this.parent.x + 8, this.parent.y + 8);
@@ -74,8 +63,9 @@ public class Node {
 		else {
 			col = 0xFF0000;
 		}
+//		renderEdges(lowX, highX, lowY, highY, screen);
 		screen.renderSprite(x, y, new Sprite(17, col, type), false);
-		renderEdges(lowX, highX, lowY, highY, screen);
+//		renderEdges(lowX, highX, lowY, highY, screen);
 	}
 
 	public EquationSystemMatrix getData() {
@@ -100,6 +90,10 @@ public class Node {
 
 	public boolean getHasSolution() {
 		return hasSolution;
+	}
+	
+	public boolean getHasChildren() {
+		return hasChildren;
 	}
 
 	public void setType(Sprite.TYPE t) {
