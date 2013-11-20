@@ -61,7 +61,7 @@ public class Viewer extends Canvas implements Runnable {
 		int h = length * 150;
 		int w = 500;
 
-		drawer = new Drawer(w, h, new Node(-8, 0, 2, tree.getRoot(), Sprite.TYPE.SQUARE, null));
+		drawer = new Drawer(w, h, new Node(-8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE, null));
 
 		user = new User(0, 0, key);
 

@@ -58,7 +58,7 @@ public class Drawer {
 				updated = true;
 				for(int j = 0; j < children.size(); j++) {
 					// change the -1 here when I get the correct file for test5.dat
-					Node n = new Node(-8, (nodes.get(i).level - 1) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
+					Node n = new Node(-8, (nodes.get(i).level) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
 					if(n.level == n.getData().getGramOrder() - 1) {
 						n.hasSolution();
 						n.setType(Sprite.TYPE.CIRCLE);
