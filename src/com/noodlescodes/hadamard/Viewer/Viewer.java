@@ -55,7 +55,7 @@ public class Viewer extends Canvas implements Runnable {
 		key = new Keyboard();
 		mouse = new Mouse();
 
-		tree = new Tree<EquationSystemMatrix>(new TNode<EquationSystemMatrix>(new EquationSystemMatrix("test5.dat")));
+		tree = new Tree<EquationSystemMatrix>(new TNode<EquationSystemMatrix>(new EquationSystemMatrix("test8.dat")));
 
 		int length = ((EquationSystemMatrix) tree.getRoot().getData()).getGramOrder();
 		int h = length * 150;

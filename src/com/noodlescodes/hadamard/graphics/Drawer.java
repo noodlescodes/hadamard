@@ -8,7 +8,7 @@ import com.noodlescodes.hadamard.structures.TNode;
 public class Drawer {
 	public int width, height;
 
-	private final static int levelHeight = 75;
+	private final static int levelHeight = 50;
 
 	private ArrayList<Node> nodes;
 
@@ -57,7 +57,6 @@ public class Drawer {
 				ArrayList<EquationSystemMatrix> children = nodes.get(i).getData().generateChildren();
 				updated = true;
 				for(int j = 0; j < children.size(); j++) {
-					// change the -1 here when I get the correct file for test5.dat
 					Node n = new Node(-8, (nodes.get(i).level) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
 					if(n.level == n.getData().getGramOrder() - 1) {
 						n.hasSolution();
