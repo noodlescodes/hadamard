@@ -26,11 +26,17 @@ public class Screen {
 		y0 -= yOffset;
 		y1 -= yOffset;
 		if(x1 - x0 == 0) {
-			for(int y = Math.min(y1, y0); y < Math.max(y1, y0); y++) {
+			int yMax = Math.max(y1, y0);
+			for(int y = Math.min(y1, y0); y < yMax; y++) {
 				if(y < 0 || y >= height) {
 					continue;
 				}
-				pixels[x0 + y * width] = 0x5E2D79;
+				try {
+					pixels[x0 + y * width] = 0x5E2D79;
+				}
+				catch(ArrayIndexOutOfBoundsException e) {
+					System.out.println("x0: " + x0 + "; y0: " + y0 + "; x1: " + x1 + "; y1" + y1);
+				}
 			}
 			return;
 		}

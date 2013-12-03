@@ -50,20 +50,54 @@ public class Drawer {
 	// }
 	// }
 
+	// public void update_old(int x, int y, boolean enterPressed) {
+	// boolean updated = false;
+	// for(int i = 0; i < nodes.size(); i++) {
+	// if(nodes.get(i).x <= x && nodes.get(i).x + 17 >= x && nodes.get(i).y <= y && nodes.get(i).y + 17 >= y && enterPressed && !nodes.get(i).getComplete()) {
+	// ArrayList<EquationSystemMatrix> children = nodes.get(i).getData().generateChildren();
+	// updated = true;
+	// for(int j = 0; j < children.size(); j++) {
+	// Node n = new Node(-8, (nodes.get(i).level) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
+	// if(n.level == n.getData().getGramOrder() - 1) {
+	// n.hasSolution();
+	// n.setType(Sprite.TYPE.CIRCLE);
+	// n.childrenGenerated();
+	// }
+	// addNode(n);
+	// }
+	// if(children.size() > 0) {
+	// nodes.get(i).hasChildren();
+	// }
+	// nodes.get(i).childrenGenerated();
+	// }
+	// nodes.get(i).update();
+	// }
+	// if(updated) {
+	// updatePosition();
+	// }
+	// }
+
 	public void update(int x, int y, boolean enterPressed) {
 		boolean updated = false;
 		for(int i = 0; i < nodes.size(); i++) {
 			if(nodes.get(i).x <= x && nodes.get(i).x + 17 >= x && nodes.get(i).y <= y && nodes.get(i).y + 17 >= y && enterPressed && !nodes.get(i).getComplete()) {
 				ArrayList<EquationSystemMatrix> children = nodes.get(i).getData().generateChildren();
 				updated = true;
-				for(int j = 0; j < children.size(); j++) {
-					Node n = new Node(-8, (nodes.get(i).level) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i));
-					if(n.level == n.getData().getGramOrder() - 1) {
-						n.hasSolution();
-						n.setType(Sprite.TYPE.CIRCLE);
-						n.childrenGenerated();
+				if(children.size() > 0) {
+					int lowerX = nodes.get(i).getLowerX() + 10;
+					int upperX = nodes.get(i).getUpperX() - 10;
+					int deltaD = (upperX - lowerX) / (children.size());
+					int currentX = lowerX - 8;
+					for(int j = 0; j < children.size(); j++) {
+						Node n = new Node((2 * currentX + deltaD) / 2, (nodes.get(i).level + 1) * levelHeight, nodes.get(i).level + 1, new TNode<EquationSystemMatrix>(children.get(j)), Sprite.TYPE.SQUARE, nodes.get(i), currentX, currentX + deltaD + 16);
+						if(n.level == n.getData().getGramOrder() - 1) {
+							n.hasSolution();
+							n.setType(Sprite.TYPE.CIRCLE);
+							n.childrenGenerated();
+						}
+						addNode(n);
+						currentX += deltaD;
 					}
-					addNode(n);
 				}
 				if(children.size() > 0) {
 					nodes.get(i).hasChildren();
@@ -72,9 +106,9 @@ public class Drawer {
 			}
 			nodes.get(i).update();
 		}
-		if(updated) {
-			updatePosition();
-		}
+//		if(updated) {
+//			updatePosition();
+//		}
 	}
 
 	private void updatePosition() {

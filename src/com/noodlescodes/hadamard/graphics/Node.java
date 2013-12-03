@@ -13,14 +13,17 @@ public class Node {
 	private boolean hasSolution = false;
 	public int level;
 	private Node parent;
+	private int upperX, lowerX;
 
-	public Node(int x, int y, int level, TNode<EquationSystemMatrix> data, Sprite.TYPE type, Node parent) {
+	public Node(int x, int y, int level, TNode<EquationSystemMatrix> data, Sprite.TYPE type, Node parent, int lowerX, int upperX) {
 		this.x = x;
 		this.y = y;
 		this.data = data;
 		this.level = level;
 		this.type = type;
 		this.parent = parent;
+		this.lowerX = lowerX;
+		this.upperX = upperX;
 	}
 
 	public void update() {
@@ -30,9 +33,8 @@ public class Node {
 	}
 
 	// This works, just need to render if parent is on screen or child is on screen
+	// Turns out this doesn't work. I need to make it so the centre of the child or parent is on screen
 	public void renderEdges(int lowX, int highX, int lowY, int highY, Screen screen) {
-//		boolean childOnScreen = lowX - 17 > x || highX - 9 < x || lowY - 17 > y || highY < y;
-//		boolean parentOnScreen = lowX - 17 > parent.x || highX - 9 < parent.x || lowY - 17 > parent.y || highY < parent.y;
 		if(parent == null) {
 			return;
 		}
@@ -111,5 +113,13 @@ public class Node {
 		else {
 			return data.getNumberChildren();
 		}
+	}
+	
+	public int getLowerX() {
+		return lowerX;
+	}
+	
+	public int getUpperX() {
+		return upperX;
 	}
 }
