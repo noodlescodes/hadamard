@@ -107,4 +107,8 @@ public class Screen {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
+	
+	public int getYOffset() {
+		return yOffset;
+	}
 }

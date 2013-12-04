@@ -8,7 +8,9 @@ import com.noodlescodes.hadamard.structures.TNode;
 public class Drawer {
 	public int width, height;
 
-	private final static int levelHeight = 50;
+	public final static int levelHeight = 50;
+	
+	public static int highestLevelGenerated = 0;
 
 	private ArrayList<Node> nodes;
 
@@ -94,6 +96,9 @@ public class Drawer {
 							n.hasSolution();
 							n.setType(Sprite.TYPE.CIRCLE);
 							n.childrenGenerated();
+						}
+						if(n.level > highestLevelGenerated) {
+							highestLevelGenerated = n.level;
 						}
 						addNode(n);
 						currentX += deltaD;

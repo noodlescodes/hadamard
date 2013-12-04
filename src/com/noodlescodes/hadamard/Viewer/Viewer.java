@@ -98,13 +98,25 @@ public class Viewer extends Canvas implements Runnable {
 		String hoverString = drawer.hover(user.x, user.y);
 		// White box to the right
 		Sprite s = new Sprite(75, screen.height, 0, 0, 0xFFFFFF);
+		Sprite t = new Sprite(10, screen.height, 0, 0, 0xFFFFFF);
 		screen.renderSprite(xScroll + (screen.width - 75), yScroll, s, false);
+		screen.renderSprite(xScroll + (screen.width - 86), yScroll, t, false);
 		for(int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
 		}
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+
+		// drawing ruler here
+		// ----
+		g.setColor(Color.BLACK);
+		g.setFont(new Font(null, 0, 25));
+		for(int currentLevel = 1; currentLevel - 1 <= drawer.highestLevelGenerated; currentLevel++) {
+			g.drawString(Integer.toString(currentLevel - 1), scale * (screen.width - 85), (20 - scale * screen.getYOffset() + 4 * drawer.levelHeight * (currentLevel - 1)));
+		}
+		// ----
+
 		if(key.debug) {
 			g.setColor(Color.WHITE);
 			g.setFont(new Font(null, 0, 25));
