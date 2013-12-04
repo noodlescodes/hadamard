@@ -32,8 +32,9 @@ public class Node {
 		}
 	}
 
-	// This works, just need to render if parent is on screen or child is on screen
-	// Turns out this doesn't work. I need to make it so the centre of the child or parent is on screen
+	// This now has the annoying bug where it duplicates the lines by a translation, only two copies though.
+	// It's because I changed the line drawing algorithm I believe.
+	// I need to go and fix this bug in this section.
 	public void renderEdges(int lowX, int highX, int lowY, int highY, Screen screen) {
 		if(parent == null) {
 			return;

@@ -8,7 +8,7 @@ import com.noodlescodes.hadamard.structures.TNode;
 public class Drawer {
 	public int width, height;
 
-	public final static int levelHeight = 50;
+	public final static int levelHeight = 75;
 	
 	public static int highestLevelGenerated = 0;
 
@@ -116,6 +116,7 @@ public class Drawer {
 //		}
 	}
 
+	// not used, although I wouldn't mind fixing
 	private void updatePosition() {
 		int numberOfLeaf = 0;
 		int X;

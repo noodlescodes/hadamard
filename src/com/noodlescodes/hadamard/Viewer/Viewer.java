@@ -55,13 +55,14 @@ public class Viewer extends Canvas implements Runnable {
 		key = new Keyboard();
 		mouse = new Mouse();
 
-		tree = new Tree<EquationSystemMatrix>(new TNode<EquationSystemMatrix>(new EquationSystemMatrix("test8.dat")));
+		tree = new Tree<EquationSystemMatrix>(new TNode<EquationSystemMatrix>(new EquationSystemMatrix("test5.dat")));
 
 		int length = ((EquationSystemMatrix) tree.getRoot().getData()).getGramOrder();
 		int h = length * 150;
 		int w = 500;
 
-		drawer = new Drawer(w, h, new Node(-8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE, null, -256, 256));
+		int howWide = 128;
+		drawer = new Drawer(w, h, new Node(-8, 0, 0, tree.getRoot(), Sprite.TYPE.SQUARE, null, -howWide, howWide));
 
 		user = new User(0, 0, key);
 
@@ -96,11 +97,15 @@ public class Viewer extends Canvas implements Runnable {
 		drawer.render(xScroll, yScroll, screen);
 		user.render(screen);
 		String hoverString = drawer.hover(user.x, user.y);
-		// White box to the right
+		// Boxes to the right, need a black one as well so you can't see the tree between the white boxes
+		// ----
 		Sprite s = new Sprite(75, screen.height, 0, 0, 0xFFFFFF);
 		Sprite t = new Sprite(10, screen.height, 0, 0, 0xFFFFFF);
+		Sprite b = new Sprite(1, screen.height, 0, 0, 0x000000);
 		screen.renderSprite(xScroll + (screen.width - 75), yScroll, s, false);
 		screen.renderSprite(xScroll + (screen.width - 86), yScroll, t, false);
+		screen.renderSprite(xScroll + (screen.width - 76), yScroll, b, false);
+		// ----
 		for(int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
 		}
@@ -115,6 +120,7 @@ public class Viewer extends Canvas implements Runnable {
 		for(int currentLevel = 1; currentLevel - 1 <= drawer.highestLevelGenerated; currentLevel++) {
 			g.drawString(Integer.toString(currentLevel - 1), scale * (screen.width - 85), (20 - scale * screen.getYOffset() + 4 * drawer.levelHeight * (currentLevel - 1)));
 		}
+		// g.drawString("10", scale * (screen.width - 85), 20);
 		// ----
 
 		if(key.debug) {

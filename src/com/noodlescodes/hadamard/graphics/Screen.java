@@ -19,8 +19,7 @@ public class Screen {
 		}
 	}
 
-	// how could I not have committed the diagonal rendering somewhere #idiot
-	public void renderLine(int x0, int y0, int x1, int y1) {
+	public void renderLine_old(int x0, int y0, int x1, int y1) {
 		x0 -= xOffset;
 		x1 -= xOffset;
 		y0 -= yOffset;
@@ -39,6 +38,66 @@ public class Screen {
 				}
 			}
 			return;
+		}
+	}
+
+	// uses Bresenham's algorithm for drawing lines.
+	// Only uses integer functions and no divisions
+	public void renderLine(int x0, int y0, int x1, int y1) {
+		x0 -= xOffset;
+		x1 -= xOffset;
+		y0 -= yOffset;
+		y1 -= yOffset;
+		int w = x1 - x0;
+		int h = y1 - y0;
+		int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+		if(w < 0) {
+			dx1 = -1;
+			dx2 = -1;
+		}
+		else if(w > 0) {
+			dx1 = 1;
+			dx2 = 1;
+		}
+		if(h < 0) {
+			dy1 = -1;
+		}
+		else if(h > 0) {
+			dy1 = 1;
+		}
+
+		int longest = Math.abs(w);
+		int shortest = Math.abs(h);
+		if(!(longest > shortest)) {
+			longest = Math.abs(h);
+			shortest = Math.abs(w);
+			if(h < 0) {
+				dy2 = -1;
+			}
+			else if(h > 0) {
+				dy2 = 1;
+			}
+			dx2 = 0;
+		}
+		int numerator = longest >> 1;
+		int xTemp = x0;
+		int yTemp = y0;
+		for(int i = 0; i < longest; i++) {
+			try {
+				pixels[xTemp + yTemp * width] = 0x5E2D79;
+			}
+			catch(ArrayIndexOutOfBoundsException e) {
+			}
+			numerator += shortest;
+			if(!(numerator < longest)) {
+				numerator -= longest;
+				xTemp += dx1;
+				yTemp += dy1;
+			}
+			else {
+				xTemp += dx2;
+				yTemp += dy2;
+			}
 		}
 	}
 
@@ -107,7 +166,7 @@ public class Screen {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
-	
+
 	public int getYOffset() {
 		return yOffset;
 	}
